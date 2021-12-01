@@ -22,10 +22,10 @@ class HomeWm extends WidgetModel<HomePage, HomeModel> implements IHomeWM {
   HomeWm(HomeModel model) : super(model);
 
   @override
-  Future<void> addTransaction(int val, TransactionType type) async {
+  void addTransaction(int val, TransactionType type) {
     _budgetController.loading();
 
-    final newVal = await model.addTransaction(val, type);
+    final newVal = model.addTransaction(val, type);
 
     _budgetController.content(newVal);
   }
@@ -63,5 +63,5 @@ class HomeWm extends WidgetModel<HomePage, HomeModel> implements IHomeWM {
 
 abstract class IHomeWM extends IWidgetModel {
   ListenableState<EntityState<int>> get budgetState;
-  Future<void> addTransaction(int value, TransactionType type);
+  void addTransaction(int value, TransactionType type);
 }
