@@ -1,47 +1,32 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import 'keyboard_btn.dart';
+
+const _data = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0'];
 
 class Keyboard extends StatelessWidget {
-  const Keyboard({Key? key}) : super(key: key);
+  final Function(String) addDigit;
+  final VoidCallback removeDigit;
+
+  const Keyboard({Key? key, required this.addDigit, required this.removeDigit,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget _btn(String label) {
-      return ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          primary: Colors.white,
-          elevation: 0,
-          side: const BorderSide(
-            width: 1,
-            color: Colors.grey,
-          ),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(color: Colors.black),
-        ),
-      );
-    }
-
     return GridView.count(
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 3,
       crossAxisSpacing: 30,
       mainAxisSpacing: 20,
       children: [
-        _btn('1'),
-        _btn('2'),
-        _btn('3'),
-        _btn('4'),
-        _btn('5'),
-        _btn('6'),
-        _btn('7'),
-        _btn('8'),
-        _btn('9'),
-        _btn(','),
-        _btn('0'),
-        _btn(''),
+        for (final _label in _data)
+          KeyboardBtn(
+            label: _label,
+            onPressed: () => addDigit(_label),
+          ),
+        KeyboardBtn(
+          label: 'remove',
+          onPressed: removeDigit,
+        ),
       ],
     );
   }

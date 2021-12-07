@@ -1,67 +1,54 @@
-import 'package:budget_app/enums/transaction_types.dart';
+import 'package:budget_app/service/model/transaction.dart';
+import 'package:budget_app/service/repository/transaction_repository.dart';
+import 'package:budget_app/ui/transactions_screen/transactions_screen.dart';
 import 'package:elementary/elementary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'home_model.dart';
-import 'home_page.dart';
+import 'home_screen.dart';
 
-HomeWm homeWmFactory(BuildContext context) {
-  final model = context.read<HomeModel>();
+HomeWM homeWmFactory(BuildContext context) {
+  final transactionRepository = context.read<TransactionRepository>();
 
-  return HomeWm(model);
+  return HomeWM(HomeModel(transactionRepository));
 }
 
-class HomeWm extends WidgetModel<HomePage, HomeModel> implements IHomeWM {
+class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
 
-  @override
-  ListenableState<EntityState<int>> get budgetState => _budgetController;
+  ValueNotifier<int> get budgetNotifier => model.transactionRepository.budgetNotifier;
+  ValueNotifier<String> get inputValNotifier  => model.inputValNotifier;
 
-  late EntityStateNotifier<int> _budgetController;
-
-  HomeWm(HomeModel model) : super(model);
-
-  @override
-  void addTransaction(int val, TransactionType type) {
-    _budgetController.loading();
-
-    final newVal = model.addTransaction(val, type);
-
-    _budgetController.content(newVal);
-  }
+  HomeWM(HomeModel model) : super(model);
 
   @override
   void initWidgetModel() {
+    _loadTransactions();
     super.initWidgetModel();
-
-    _budgetController = EntityStateNotifier<int>.value(model.currentBudget);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void addTransaction(TransactionType type) {
+    model.addTransaction(type);
   }
 
-  @override
-  void onErrorHandle(Object error) {
-    super.onErrorHandle(error);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(error.toString()),
-      ),
-    );
+  void addDigit(String digit) {
+    if(inputValNotifier.value.isNotEmpty || digit != '0') model.addDigit(digit);
   }
 
-  @override
-  void dispose() {
-    _budgetController.dispose();
-
-    super.dispose();
+  void removeDigit() {
+    model.removeDigit();
   }
-}
 
-abstract class IHomeWM extends IWidgetModel {
-  ListenableState<EntityState<int>> get budgetState;
-  void addTransaction(int value, TransactionType type);
+  void clearInput() {
+    model.clearInput();
+  }
+
+  void onTapTransactionsList() {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const TransactionsScreen()));
+  }
+
+  void _loadTransactions() {
+    model.loadTransactions();
+  }
 }

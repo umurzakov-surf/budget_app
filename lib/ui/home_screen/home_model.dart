@@ -1,29 +1,39 @@
-import 'package:budget_app/enums/transaction_types.dart';
+// import 'package:budget_app/enums/transaction_type.dart';
+import 'package:budget_app/service/model/transaction.dart';
+import 'package:budget_app/service/repository/transaction_repository.dart';
 import 'package:elementary/elementary.dart';
+import 'package:flutter/widgets.dart';
 
 class HomeModel extends ElementaryModel {
-  int get currentBudget => _currentBudget;
-  String get inputVal => _inputVal;
+  final ValueNotifier<String> inputValNotifier = ValueNotifier('');
+  final TransactionRepository transactionRepository;
 
-  int _currentBudget = 0;
-  String _inputVal = '0';
+  HomeModel(this.transactionRepository) : super();
 
-  HomeModel(ErrorHandler errorHandler) : super(errorHandler: errorHandler);
-
-  int addTransaction(int value, TransactionType type) {
-
-    type == TransactionType.income
-        ? _currentBudget += value
-        : _currentBudget -= value;
-
-    return _currentBudget;
+  void addTransaction(TransactionType type) {
+    if (inputValNotifier.value != '') {
+      final transaction = Transaction(value: int.parse(inputValNotifier.value), category: TransactionCategory.gift, type: type, icon: 'https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png');
+      transactionRepository.addTransaction(transaction);
+      inputValNotifier.value = '';
+    }
   }
 
-  void inputDigit(String digit) {
-    _inputVal == '0' ? _inputVal = digit : _inputVal += digit;
+  void addDigit(String digit) {
+    inputValNotifier.value += digit;
   }
 
-  void removeLastDigit() {
-    _inputVal.length == 1 ? _inputVal = '0' : _inputVal.substring(0, _inputVal.length - 1);
+  void removeDigit() {
+    inputValNotifier.value = inputValNotifier.value == ''
+        ? inputValNotifier.value
+        : inputValNotifier.value
+            .substring(0, inputValNotifier.value.length - 1);
+  }
+
+  void clearInput() {
+    inputValNotifier.value = '';
+  }
+
+  void loadTransactions() {
+    transactionRepository.getList();
   }
 }
