@@ -15,21 +15,21 @@ TransactionsScreenWM transactionsScreenWMFactory(BuildContext context) {
 class TransactionsScreenWM
     extends WidgetModel<TransactionsScreen, TransactionsScreenModel> {
 
-  ValueNotifier<List<Transaction>> get transactionsListState => model.transactionsList;
+  final _transactionsListState = EntityStateNotifier<List<Transaction>>();
+
+  ListenableState<EntityState<List<Transaction>>> get transactionsListState => _transactionsListState;
 
   TransactionsScreenWM(TransactionsScreenModel model) : super(model);
 
   @override
   void initWidgetModel() {
+
+    _loadTransactions();
     super.initWidgetModel();
-    _loadTransactionsList();
   }
 
-  void addTransaction(Transaction transaction) {
-    model.addTransaction(transaction);
-  }
-
-  void _loadTransactionsList() {
-    model.loadTransactions();
+  void _loadTransactions() {
+    final transactionsList = model.loadTransactions();
+    _transactionsListState.content(transactionsList);
   }
 }

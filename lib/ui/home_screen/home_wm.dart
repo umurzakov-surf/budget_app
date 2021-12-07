@@ -1,5 +1,6 @@
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/service/repository/transaction_repository.dart';
+import 'package:budget_app/ui/home_screen/widgets/categories_modal.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/foundation.dart';
@@ -17,38 +18,75 @@ HomeWM homeWmFactory(BuildContext context) {
 
 class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
 
-  ValueNotifier<int> get budgetNotifier => model.transactionRepository.budgetNotifier;
   ValueNotifier<String> get inputValNotifier  => model.inputValNotifier;
+  ValueNotifier<int> get budgetValNotifier  => model.budgetValNotifier;
 
   HomeWM(HomeModel model) : super(model);
 
   @override
   void initWidgetModel() {
-    _loadTransactions();
+    _loadBudget();
     super.initWidgetModel();
   }
 
-  void addTransaction(TransactionType type) {
-    model.addTransaction(type);
+  Future<void> addTransaction(TransactionType type) async {
+
+
+    if (inputValNotifier.value != '') {
+
+      final category = await showDialog<TransactionCategory?>(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return const CategoriesModal();
+        },
+      );
+
+      final transaction = Transaction(
+        value: int.parse(inputValNotifier.value),
+        category: category ?? TransactionCategory.gift,
+        type: type,
+        icon:
+        'https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png',
+      );
+
+
+      type == TransactionType.income
+          ? budgetValNotifier.value += transaction.value
+          : budgetValNotifier.value -= transaction.value;
+
+      model.addTransaction(transaction);
+      inputValNotifier.value = '';
+    } else {
+      _showSnackbar('Заполните поле суммы');
+    }
   }
 
   void addDigit(String digit) {
-    if(inputValNotifier.value.isNotEmpty || digit != '0') model.addDigit(digit);
+    if(inputValNotifier.value.isNotEmpty || digit != '0') inputValNotifier.value += digit;
   }
 
   void removeDigit() {
-    model.removeDigit();
+    inputValNotifier.value = inputValNotifier.value == ''
+        ? inputValNotifier.value
+        : inputValNotifier.value
+        .substring(0, inputValNotifier.value.length - 1);
   }
 
   void clearInput() {
-    model.clearInput();
+    inputValNotifier.value = '';
   }
 
   void onTapTransactionsList() {
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const TransactionsScreen()));
   }
 
-  void _loadTransactions() {
-    model.loadTransactions();
+  void _loadBudget() {
+    model.loadBudget();
+  }
+
+  void _showSnackbar(String text) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(text), backgroundColor: Colors.redAccent,));
   }
 }

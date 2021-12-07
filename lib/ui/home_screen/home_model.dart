@@ -1,4 +1,3 @@
-// import 'package:budget_app/enums/transaction_type.dart';
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/service/repository/transaction_repository.dart';
 import 'package:elementary/elementary.dart';
@@ -6,34 +5,25 @@ import 'package:flutter/widgets.dart';
 
 class HomeModel extends ElementaryModel {
   final ValueNotifier<String> inputValNotifier = ValueNotifier('');
-  final TransactionRepository transactionRepository;
+  final ValueNotifier<int> budgetValNotifier = ValueNotifier(0);
+  final TransactionRepository _transactionRepository;
 
-  HomeModel(this.transactionRepository) : super();
+  HomeModel(this._transactionRepository) : super();
 
-  void addTransaction(TransactionType type) {
-    if (inputValNotifier.value != '') {
-      final transaction = Transaction(value: int.parse(inputValNotifier.value), category: TransactionCategory.gift, type: type, icon: 'https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png');
-      transactionRepository.addTransaction(transaction);
-      inputValNotifier.value = '';
+  void addTransaction(Transaction transaction) {
+    _transactionRepository.addTransaction(transaction);
+  }
+
+  void loadBudget() {
+    var budget = 0;
+    final transactionsList = _transactionRepository.getTransactions();
+
+    for (final transaction in transactionsList) {
+      transaction.type == TransactionType.income
+          ? budget += transaction.value
+          : budget -= transaction.value;
     }
-  }
 
-  void addDigit(String digit) {
-    inputValNotifier.value += digit;
-  }
-
-  void removeDigit() {
-    inputValNotifier.value = inputValNotifier.value == ''
-        ? inputValNotifier.value
-        : inputValNotifier.value
-            .substring(0, inputValNotifier.value.length - 1);
-  }
-
-  void clearInput() {
-    inputValNotifier.value = '';
-  }
-
-  void loadTransactions() {
-    transactionRepository.getList();
+    budgetValNotifier.value = budget;
   }
 }
