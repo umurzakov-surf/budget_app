@@ -1,8 +1,13 @@
-import 'package:budget_app/service/model/transaction.dart';
+import 'package:budget_app/service/model/transaction_category.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesModal extends StatelessWidget {
-  const CategoriesModal({Key? key}) : super(key: key);
+  final List<TransactionCategory> categoriesList;
+
+  const CategoriesModal({
+    Key? key,
+    required this.categoriesList,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +16,7 @@ class CategoriesModal extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: TransactionCategory.values
+        children: categoriesList
             .map((category) => Container(
                   color: Colors.lightBlue,
                   margin: const EdgeInsets.only(bottom: 10),
@@ -19,9 +24,9 @@ class CategoriesModal extends StatelessWidget {
                     height: 40,
                     minWidth: double.infinity,
                     onPressed: () {
-                      Navigator.of(context).pop<TransactionCategory>(category);
+                      Navigator.of(context).pop<String>(category.label);
                     },
-                    child: Text('$category'),
+                    child: Text(category.label),
                   ),
                 ))
             .toList(),

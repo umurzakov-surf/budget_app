@@ -8,26 +8,39 @@ class Keyboard extends StatelessWidget {
   final Function(String) addDigit;
   final VoidCallback removeDigit;
 
-  const Keyboard({Key? key, required this.addDigit, required this.removeDigit,}) : super(key: key);
+  const Keyboard({
+    Key? key,
+    required this.addDigit,
+    required this.removeDigit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      crossAxisSpacing: 30,
-      mainAxisSpacing: 20,
-      children: [
-        for (final _label in _data)
-          KeyboardBtn(
-            label: _label,
-            onPressed: () => addDigit(_label),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Center(
+          child: GridView.count(
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            crossAxisSpacing: 30,
+            mainAxisSpacing: 20,
+            children: [
+              for (final label in _data)
+                label.isEmpty
+                    ? const SizedBox()
+                    : KeyboardBtn(
+                        label: label,
+                        onPressed: () => addDigit(label),
+                      ),
+              KeyboardBtn(
+                label: 'remove',
+                onPressed: removeDigit,
+              ),
+            ],
           ),
-        KeyboardBtn(
-          label: 'remove',
-          onPressed: removeDigit,
         ),
-      ],
+      ),
     );
   }
 }

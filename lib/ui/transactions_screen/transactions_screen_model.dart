@@ -7,7 +7,9 @@ class TransactionsScreenModel extends ElementaryModel {
 
   TransactionsScreenModel(this._transactionRepository);
 
-  List<Transaction> loadTransactions() {
-    return _transactionRepository.getTransactions();
+  Future<List<Transaction>> loadTransactions() async {
+    final transactions = await _transactionRepository.getTransactions();
+
+    return transactions;
   }
 }

@@ -10,19 +10,13 @@ class HomeModel extends ElementaryModel {
 
   HomeModel(this._transactionRepository) : super();
 
-  void addTransaction(Transaction transaction) {
-    _transactionRepository.addTransaction(transaction);
+  Future<void> addTransaction(Transaction transaction) async {
+    await _transactionRepository.addTransaction(transaction);
+    await loadBudget();
   }
 
-  void loadBudget() {
-    var budget = 0;
-    final transactionsList = _transactionRepository.getTransactions();
-
-    for (final transaction in transactionsList) {
-      transaction.type == TransactionType.income
-          ? budget += transaction.value
-          : budget -= transaction.value;
-    }
+  Future<void> loadBudget() async {
+    final budget = await _transactionRepository.getBudget();
 
     budgetValNotifier.value = budget;
   }

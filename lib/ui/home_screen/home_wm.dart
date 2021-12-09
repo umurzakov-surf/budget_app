@@ -1,4 +1,6 @@
+import 'package:budget_app/enums/transaction_type_enum.dart';
 import 'package:budget_app/service/model/transaction.dart';
+import 'package:budget_app/service/repository/categories_repository.dart';
 import 'package:budget_app/service/repository/transaction_repository.dart';
 import 'package:budget_app/ui/home_screen/widgets/categories_modal.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen.dart';
@@ -17,9 +19,9 @@ HomeWM homeWmFactory(BuildContext context) {
 }
 
 class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
+  ValueNotifier<String> get inputValNotifier => model.inputValNotifier;
 
-  ValueNotifier<String> get inputValNotifier  => model.inputValNotifier;
-  ValueNotifier<int> get budgetValNotifier  => model.budgetValNotifier;
+  ValueNotifier<int> get budgetValNotifier => model.budgetValNotifier;
 
   HomeWM(HomeModel model) : super(model);
 
@@ -29,33 +31,27 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
     super.initWidgetModel();
   }
 
-  Future<void> addTransaction(TransactionType type) async {
-
-
+  Future<void> addTransaction(TransactionTypeEnum type) async {
     if (inputValNotifier.value != '') {
+      final categoriesList = CategoriesRepository().getByType(type);
 
-      final category = await showDialog<TransactionCategory?>(
+      final category = await showDialog<String?>(
         barrierDismissible: false,
         context: context,
         builder: (_) {
-          return const CategoriesModal();
+          return CategoriesModal(
+            categoriesList: categoriesList,
+          );
         },
       );
 
       final transaction = Transaction(
         value: int.parse(inputValNotifier.value),
-        category: category ?? TransactionCategory.gift,
+        category: category ?? categoriesList.first.label,
         type: type,
-        icon:
-        'https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png',
       );
 
-
-      type == TransactionType.income
-          ? budgetValNotifier.value += transaction.value
-          : budgetValNotifier.value -= transaction.value;
-
-      model.addTransaction(transaction);
+      await model.addTransaction(transaction);
       inputValNotifier.value = '';
     } else {
       _showSnackbar('Заполните поле суммы');
@@ -63,14 +59,15 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   }
 
   void addDigit(String digit) {
-    if(inputValNotifier.value.isNotEmpty || digit != '0') inputValNotifier.value += digit;
+    if (inputValNotifier.value.isNotEmpty || digit != '0')
+      inputValNotifier.value += digit;
   }
 
   void removeDigit() {
     inputValNotifier.value = inputValNotifier.value == ''
         ? inputValNotifier.value
         : inputValNotifier.value
-        .substring(0, inputValNotifier.value.length - 1);
+            .substring(0, inputValNotifier.value.length - 1);
   }
 
   void clearInput() {
@@ -78,7 +75,9 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   }
 
   void onTapTransactionsList() {
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const TransactionsScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const TransactionsScreen()),
+    );
   }
 
   void _loadBudget() {
@@ -86,7 +85,9 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   }
 
   void _showSnackbar(String text) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(text), backgroundColor: Colors.redAccent,));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.redAccent,
+    ));
   }
 }

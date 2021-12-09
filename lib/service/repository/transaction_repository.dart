@@ -1,23 +1,59 @@
 import 'dart:convert';
 
+import 'package:budget_app/enums/transaction_type_enum.dart';
 import 'package:budget_app/service/model/transaction.dart';
+import 'package:budget_app/service/repository/shared_preferences_helper.dart';
+
+const transactionsSharedPref = 'transactions';
+const budgetSharedPref = 'budget';
 
 class TransactionRepository {
-  final jsonString = '[{"value": 100, "category": "gift", "type": "income", "icon": "https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png"}, {"value": 200, "category": "gift", "type": "income", "icon": "https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png"}, {"value": 300, "category": "gift", "type": "income", "icon": "https://www.vhv.rs/dpng/d/8-86885_map-pin-icon-png-transparent-png.png"}]';
-
   final transactionsList = <Transaction>[];
+  final SharedPreferencesHelper _sharedPreferencesHelper;
 
-  TransactionRepository(){
-    for(final transaction in jsonDecode(jsonString) as List) {
-      transactionsList.add(Transaction.fromJson(transaction as Map<String, dynamic>));
-    }
+  TransactionRepository(this._sharedPreferencesHelper) {
+    _loadTransactions();
   }
 
-  List<Transaction> getTransactions() {
+  Future<List<Transaction>> getTransactions() async {
     return transactionsList;
   }
 
-  void addTransaction(Transaction transaction) {
+  Future<void> addTransaction(Transaction transaction) async {
     transactionsList.add(transaction);
+
+    final transactionsListString = jsonEncode(transactionsList);
+    await _sharedPreferencesHelper.set(
+      transactionsSharedPref,
+      transactionsListString,
+    );
+    await _setNewBudget(transaction);
+  }
+
+  Future<int> getBudget() async {
+    final budget = await _sharedPreferencesHelper.get(budgetSharedPref, 0);
+
+    return budget;
+  }
+
+  Future<void> _loadTransactions() async {
+    final transactionsListString =
+        await _sharedPreferencesHelper.get(transactionsSharedPref, '');
+
+    if (transactionsListString.isNotEmpty) {
+      for (final transaction in jsonDecode(transactionsListString) as List) {
+        transactionsList
+            .add(Transaction.fromJson(transaction as Map<String, dynamic>));
+      }
+    }
+  }
+
+  Future<void> _setNewBudget(Transaction transaction) async {
+    var currentBudget = await _sharedPreferencesHelper.get(budgetSharedPref, 0);
+    transaction.type == TransactionTypeEnum.income
+        ? currentBudget += transaction.value
+        : currentBudget -= transaction.value;
+
+    await _sharedPreferencesHelper.set(budgetSharedPref, currentBudget);
   }
 }

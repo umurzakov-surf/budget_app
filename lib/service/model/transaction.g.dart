@@ -8,31 +8,18 @@ part of 'transaction.dart';
 
 Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       value: json['value'] as int,
-      category: $enumDecode(_$TransactionCategoryEnumMap, json['category']),
-      type: $enumDecode(_$TransactionTypeEnumMap, json['type']),
-      icon: json['icon'] as String,
+      category: json['category'] as String,
+      type: $enumDecode(_$TransactionTypeEnumEnumMap, json['type']),
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
     <String, dynamic>{
       'value': instance.value,
-      'category': _$TransactionCategoryEnumMap[instance.category],
-      'type': _$TransactionTypeEnumMap[instance.type],
-      'icon': instance.icon,
+      'category': instance.category,
+      'type': _$TransactionTypeEnumEnumMap[instance.type],
     };
 
-const _$TransactionCategoryEnumMap = {
-  TransactionCategory.food: 'food',
-  TransactionCategory.gas: 'gas',
-  TransactionCategory.restaurant: 'restaurant',
-  TransactionCategory.utility: 'utility',
-  TransactionCategory.debt: 'debt',
-  TransactionCategory.loan: 'loan',
-  TransactionCategory.gift: 'gift',
-  TransactionCategory.salary: 'salary',
-};
-
-const _$TransactionTypeEnumMap = {
-  TransactionType.income: 'income',
-  TransactionType.expense: 'expense',
+const _$TransactionTypeEnumEnumMap = {
+  TransactionTypeEnum.income: 'income',
+  TransactionTypeEnum.expense: 'expense',
 };

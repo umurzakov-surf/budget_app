@@ -1,10 +1,10 @@
-import 'package:budget_app/service/model/transaction.dart';
+import 'package:budget_app/enums/transaction_type_enum.dart';
 import 'package:flutter/material.dart';
 
 class AddTransactionBtn extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  final TransactionType type;
+  final TransactionTypeEnum type;
   final Color btnColor;
 
   const AddTransactionBtn({
@@ -12,7 +12,8 @@ class AddTransactionBtn extends StatelessWidget {
     required this.onPressed,
     required this.label,
     required this.type,
-  })  : btnColor = type == TransactionType.income ? Colors.green : Colors.red,
+  })  : btnColor =
+            type == TransactionTypeEnum.income ? Colors.green : Colors.red,
         super(key: key);
 
   @override
