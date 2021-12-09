@@ -59,8 +59,9 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   }
 
   void addDigit(String digit) {
-    if (inputValNotifier.value.isNotEmpty || digit != '0')
+    if (inputValNotifier.value.isNotEmpty || digit != '0') {
       inputValNotifier.value += digit;
+    }
   }
 
   void removeDigit() {
