@@ -27,9 +27,4 @@ class SharedPreferencesHelper {
       throw Exception("Does't support type ${value.runtimeType} yet.");
     }
   }
-
-  Future<void> clear() async {
-    final instance = await _prefs;
-    await instance.clear();
-  }
 }

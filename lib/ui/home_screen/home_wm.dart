@@ -19,42 +19,35 @@ HomeWM homeWmFactory(BuildContext context) {
 }
 
 class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
-  ValueNotifier<String> get inputValNotifier => model.inputValNotifier;
+  final ValueNotifier<String> inputValNotifier = ValueNotifier('');
 
   ValueNotifier<int> get budgetValNotifier => model.budgetValNotifier;
 
   HomeWM(HomeModel model) : super(model);
 
-  @override
-  void initWidgetModel() {
-    _loadBudget();
-    super.initWidgetModel();
-  }
-
   Future<void> addTransaction(TransactionTypeEnum type) async {
-    if (inputValNotifier.value != '') {
+    if (inputValNotifier.value.isNotEmpty) {
       final categoriesList = CategoriesRepository().getByType(type);
 
       final category = await showDialog<String?>(
-        barrierDismissible: false,
         context: context,
         builder: (_) {
-          return CategoriesModal(
-            categoriesList: categoriesList,
-          );
+          return CategoriesModal(categoriesList: categoriesList);
         },
       );
 
-      final transaction = Transaction(
-        value: int.parse(inputValNotifier.value),
-        category: category ?? categoriesList.first.label,
-        type: type,
-      );
+      if (category != null) {
+        final transaction = Transaction(
+          value: int.parse(inputValNotifier.value),
+          category: category,
+          type: type,
+        );
 
-      await model.addTransaction(transaction);
+        await model.addTransaction(transaction);
+      }
       inputValNotifier.value = '';
     } else {
-      _showSnackbar('Заполните поле суммы');
+      _showSnackBar('Fill input');
     }
   }
 
@@ -65,7 +58,7 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   }
 
   void removeDigit() {
-    inputValNotifier.value = inputValNotifier.value == ''
+    inputValNotifier.value = inputValNotifier.value.isEmpty
         ? inputValNotifier.value
         : inputValNotifier.value
             .substring(0, inputValNotifier.value.length - 1);
@@ -81,11 +74,7 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
     );
   }
 
-  void _loadBudget() {
-    model.loadBudget();
-  }
-
-  void _showSnackbar(String text) {
+  void _showSnackBar(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
       backgroundColor: Colors.redAccent,

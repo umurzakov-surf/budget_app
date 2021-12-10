@@ -29,24 +29,27 @@ class Input extends StatelessWidget {
           builder: (_, data, __) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 20,
                   ),
                   child: Text(
                     data.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
                 Container(
                   width: 1,
+                  height: double.infinity,
                   color: Colors.grey,
                 ),
                 MaterialButton(
                   onPressed: clearInput,
-                  child: const Text('x'),
+                  child: const Icon(Icons.clear, color: Colors.white),
                   height: double.infinity,
                   minWidth: 60,
                 ),

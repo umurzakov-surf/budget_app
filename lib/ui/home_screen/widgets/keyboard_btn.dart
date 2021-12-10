@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class KeyboardBtn extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
+  final bool isRemove;
 
   const KeyboardBtn({
     Key? key,
     required this.label,
     required this.onPressed,
+    this.isRemove = false,
   }) : super(key: key);
 
   @override
@@ -16,16 +18,21 @@ class KeyboardBtn extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
-        primary: Colors.white,
+        primary: Theme.of(context).colorScheme.primaryVariant,
         elevation: 0,
-        side: const BorderSide(
-          color: Colors.grey,
-        ),
       ),
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.black),
-      ),
+      child: !isRemove
+          ? Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            )
+          : const Icon(
+              Icons.backspace_outlined,
+              color: Colors.white,
+            ),
     );
   }
 }

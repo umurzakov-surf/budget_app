@@ -13,20 +13,24 @@ class CategoriesModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       elevation: 0,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: categoriesList
             .map((category) => Container(
-                  color: Colors.lightBlue,
-                  margin: const EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 5),
                   child: MaterialButton(
+                    color: Theme.of(context).colorScheme.primaryVariant,
                     height: 40,
                     minWidth: double.infinity,
                     onPressed: () {
                       Navigator.of(context).pop<String>(category.label);
                     },
-                    child: Text(category.label),
+                    child: Text(
+                      category.label,
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                   ),
                 ))
             .toList(),

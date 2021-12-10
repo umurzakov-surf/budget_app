@@ -13,8 +13,8 @@ class TransactionTile extends StatelessWidget {
     required this.transaction,
   })  : sign = transaction.type == TransactionTypeEnum.income ? '+' : '-',
         color = transaction.type == TransactionTypeEnum.income
-            ? Colors.green
-            : Colors.red,
+            ? const Color(0xff00c79c)
+            : const Color(0xffdb7059),
         icon = transaction.type == TransactionTypeEnum.income
             ? Icons.add
             : Icons.remove,
@@ -26,6 +26,7 @@ class TransactionTile extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
+      tileColor: Theme.of(context).colorScheme.primaryVariant,
       leading: Container(
         height: 40,
         width: 40,
@@ -39,7 +40,7 @@ class TransactionTile extends StatelessWidget {
         '$sign ${transaction.value}',
         style: TextStyle(color: color),
       ),
-      subtitle: Text(transaction.category),
+      subtitle: Text(transaction.category, style: const TextStyle(color: Colors.white),),
     );
   }
 }

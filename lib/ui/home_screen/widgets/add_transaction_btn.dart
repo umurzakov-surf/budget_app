@@ -13,7 +13,7 @@ class AddTransactionBtn extends StatelessWidget {
     required this.label,
     required this.type,
   })  : btnColor =
-            type == TransactionTypeEnum.income ? Colors.green : Colors.red,
+            type == TransactionTypeEnum.income ? const Color(0xff00c79c) : const Color(0xffdb7059),
         super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class AddTransactionBtn extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          primary: Colors.white,
+          primary: Theme.of(context).colorScheme.primaryVariant,
           elevation: 0,
           side: BorderSide(color: btnColor),
           padding: const EdgeInsets.symmetric(vertical: 15),

@@ -34,8 +34,9 @@ class Keyboard extends StatelessWidget {
                         onPressed: () => addDigit(label),
                       ),
               KeyboardBtn(
-                label: 'remove',
+                label: '',
                 onPressed: removeDigit,
+                isRemove: true,
               ),
             ],
           ),

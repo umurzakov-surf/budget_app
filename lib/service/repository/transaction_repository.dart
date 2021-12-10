@@ -4,8 +4,8 @@ import 'package:budget_app/enums/transaction_type_enum.dart';
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/service/repository/shared_preferences_helper.dart';
 
-const transactionsSharedPref = 'transactions';
-const budgetSharedPref = 'budget';
+const _sharedPrefKeyTransactions = 'transactions';
+const _sharedPrefKeyBudget = 'budget';
 
 class TransactionRepository {
   final transactionsList = <Transaction>[];
@@ -20,25 +20,25 @@ class TransactionRepository {
   }
 
   Future<void> addTransaction(Transaction transaction) async {
-    transactionsList.add(transaction);
+    transactionsList.insert(0, transaction);
 
     final transactionsListString = jsonEncode(transactionsList);
     await _sharedPreferencesHelper.set(
-      transactionsSharedPref,
+      _sharedPrefKeyTransactions,
       transactionsListString,
     );
     await _setNewBudget(transaction);
   }
 
   Future<int> getBudget() async {
-    final budget = await _sharedPreferencesHelper.get(budgetSharedPref, 0);
+    final budget = await _sharedPreferencesHelper.get(_sharedPrefKeyBudget, 0);
 
     return budget;
   }
 
   Future<void> _loadTransactions() async {
     final transactionsListString =
-        await _sharedPreferencesHelper.get(transactionsSharedPref, '');
+        await _sharedPreferencesHelper.get(_sharedPrefKeyTransactions, '');
 
     if (transactionsListString.isNotEmpty) {
       for (final transaction in jsonDecode(transactionsListString) as List) {
@@ -49,11 +49,11 @@ class TransactionRepository {
   }
 
   Future<void> _setNewBudget(Transaction transaction) async {
-    var currentBudget = await _sharedPreferencesHelper.get(budgetSharedPref, 0);
+    var currentBudget = await _sharedPreferencesHelper.get(_sharedPrefKeyBudget, 0);
     transaction.type == TransactionTypeEnum.income
         ? currentBudget += transaction.value
         : currentBudget -= transaction.value;
 
-    await _sharedPreferencesHelper.set(budgetSharedPref, currentBudget);
+    await _sharedPreferencesHelper.set(_sharedPrefKeyBudget, currentBudget);
   }
 }

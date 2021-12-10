@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class Display extends StatelessWidget {
   final ValueNotifier<int> budgetValNotifier;
@@ -12,7 +12,10 @@ class Display extends StatelessWidget {
       child: Center(
         child: ValueListenableBuilder(
           valueListenable: budgetValNotifier,
-          builder: (_, data, __) => Text('$data'),
+          builder: (_, data, __) => Text(
+            '$data р.',
+            style: const TextStyle(color: Colors.white, fontSize: 30),
+          ),
         ),
       ),
     );
