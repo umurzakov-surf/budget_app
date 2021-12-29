@@ -21,7 +21,7 @@ HomeWM homeWmFactory(BuildContext context) {
 class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   final ValueNotifier<String> inputValNotifier = ValueNotifier('');
 
-  ValueNotifier<int> get budgetValNotifier => model.budgetValNotifier;
+    ValueNotifier<int> get budgetValNotifier => model.budgetValNotifier;
 
   HomeWM(HomeModel model) : super(model);
 
