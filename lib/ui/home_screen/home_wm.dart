@@ -5,35 +5,46 @@ import 'package:budget_app/service/repository/transaction_repository.dart';
 import 'package:budget_app/ui/home_screen/widgets/categories_modal.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen.dart';
 import 'package:elementary/elementary.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'home_model.dart';
 import 'home_screen.dart';
+import 'methods/dialog_helper.dart';
+import 'methods/navigation_helper.dart';
+import 'methods/snack_helper.dart';
 
 HomeWM homeWmFactory(BuildContext context) {
-  final transactionRepository = context.read<TransactionRepository>();
-
-  return HomeWM(HomeModel(transactionRepository));
+  return HomeWM(
+    HomeModel(context.read<TransactionRepository>()),
+    DialogHelper(),
+    NavigationHelper(),
+    SnackHelper(),
+  );
 }
 
 class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   final ValueNotifier<String> inputValNotifier = ValueNotifier('');
+  final DialogHelper _dialogHelper;
+  final NavigationHelper _navigationHelper;
+  final SnackHelper _snackHelper;
 
-    ValueNotifier<int> get budgetValNotifier => model.budgetValNotifier;
+  ValueNotifier<int> get budgetValNotifier => model.budgetValNotifier;
 
-  HomeWM(HomeModel model) : super(model);
+  HomeWM(
+    HomeModel model,
+    this._dialogHelper,
+    this._navigationHelper,
+    this._snackHelper,
+  ) : super(model);
 
   Future<void> addTransaction(TransactionTypeEnum type) async {
     if (inputValNotifier.value.isNotEmpty) {
       final categoriesList = CategoriesRepository().getByType(type);
 
-      final category = await showDialog<String?>(
+      final category = await _dialogHelper.showCustomDialog<String>(
         context: context,
-        builder: (_) {
-          return CategoriesModal(categoriesList: categoriesList);
-        },
+        builder: (context) => CategoriesModal(categoriesList: categoriesList),
       );
 
       if (category != null) {
@@ -69,15 +80,19 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
   }
 
   void onTapTransactionsList() {
-    Navigator.of(context).push(
+    _navigationHelper.push(
+      context,
       MaterialPageRoute<void>(builder: (_) => const TransactionsScreen()),
     );
   }
 
   void _showSnackBar(String text) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(text),
-      backgroundColor: Colors.redAccent,
-    ));
+    _snackHelper.showSnack(
+      context,
+      SnackBar(
+        content: Text(text),
+        backgroundColor: Colors.redAccent,
+      ),
+    );
   }
 }
