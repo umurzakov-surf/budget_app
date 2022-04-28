@@ -1,6 +1,7 @@
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen_wm.dart';
 import 'package:budget_app/ui/transactions_screen/widgets/transaction_tile.dart';
+import 'package:budget_app/ui/transactions_screen/widgets/transactions_list.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 
@@ -21,17 +22,7 @@ class TransactionsScreen extends ElementaryWidget<TransactionsScreenWM> {
             return const CircularProgressIndicator();
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(10),
-            physics: const ClampingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return TransactionTile(transaction: data[index]);
-            },
-            itemCount: data.length,
-            separatorBuilder: (context, index) {
-              return const Divider(thickness: 1);
-            },
-          );
+          return TransactionsList(transactions: data);
         },
       ),
     );

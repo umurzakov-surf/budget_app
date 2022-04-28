@@ -30,7 +30,7 @@ void main() {
         .thenAnswer((_) => Future.value(transaction.value));
     when(() => sharedPrefsHelperMock.set(_sharedPrefKeyTransactions, jsonEncode([transaction])))
         .thenAnswer((_) => Future.value());
-    when(() => sharedPrefsHelperMock.set(_sharedPrefKeyBudget, 200))
+    when(() => sharedPrefsHelperMock.set(_sharedPrefKeyBudget, any()))
         .thenAnswer((_) => Future.value());
 
     transactionRepository = TransactionRepository(sharedPrefsHelperMock);
