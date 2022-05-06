@@ -7,11 +7,10 @@ import 'ui/app/budget_app.dart';
 final getIt = GetIt.instance;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   getIt
-    ..registerSingleton<SharedPreferencesHelper>(SharedPreferencesHelper())
-    ..registerSingleton<TransactionRepository>(
-      TransactionRepository(SharedPreferencesHelper()),
+    ..registerFactory<SharedPreferencesHelper>(() => SharedPreferencesHelper())
+    ..registerFactory<TransactionRepository>(
+      () => TransactionRepository(SharedPreferencesHelper()),
     );
 
   runApp(const BudgetApp());
