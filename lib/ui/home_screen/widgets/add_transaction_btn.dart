@@ -22,7 +22,7 @@ class AddTransactionBtn extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).colorScheme.primaryVariant,
+          primary: Theme.of(context).colorScheme.primaryContainer,
           elevation: 0,
           side: BorderSide(color: btnColor),
           padding: const EdgeInsets.symmetric(vertical: 15),

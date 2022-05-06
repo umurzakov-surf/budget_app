@@ -1,6 +1,5 @@
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen_wm.dart';
-import 'package:budget_app/ui/transactions_screen/widgets/transaction_tile.dart';
 import 'package:budget_app/ui/transactions_screen/widgets/transactions_list.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';

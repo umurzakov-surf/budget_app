@@ -11,7 +11,7 @@ class BudgetApp extends StatelessWidget {
       theme: ThemeData().copyWith(
         colorScheme: ThemeData().colorScheme.copyWith(
           primary: const Color(0xff16202e),
-          primaryVariant: const Color(0xff2f3e50),
+          primaryContainer: const Color(0xff2f3e50),
           secondary: const Color(0xff00c79c),
           error: const Color(0xffdb7059),
         ),

@@ -1,4 +1,5 @@
 import 'package:budget_app/enums/transaction_type_enum.dart';
+import 'package:budget_app/main.dart';
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/service/repository/categories_repository.dart';
 import 'package:budget_app/service/repository/transaction_repository.dart';
@@ -6,7 +7,6 @@ import 'package:budget_app/ui/home_screen/widgets/categories_modal.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'home_model.dart';
 import 'home_screen.dart';
@@ -14,9 +14,9 @@ import 'methods/dialog_helper.dart';
 import 'methods/navigation_helper.dart';
 import 'methods/snack_helper.dart';
 
-HomeWM homeWmFactory(BuildContext context) {
+HomeWM homeWmFactory(BuildContext _) {
   return HomeWM(
-    HomeModel(context.read<TransactionRepository>()),
+    HomeModel(getIt<TransactionRepository>()),
     DialogHelper(),
     NavigationHelper(),
     SnackHelper(),
