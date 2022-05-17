@@ -3,7 +3,6 @@ import 'package:budget_app/service/repository/transaction_repository.dart';
 import 'package:budget_app/ui/app/budget_app.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDependencies extends StatefulWidget {
   final BudgetApp app;
@@ -15,9 +14,6 @@ class AppDependencies extends StatefulWidget {
 }
 
 class _AppDependenciesState extends State<AppDependencies> {
-  final Future<SharedPreferences> sharedPreferencesFuture =
-      SharedPreferences.getInstance();
-  late SharedPreferences sharedPreferences;
 
   @override
   Widget build(BuildContext context) {

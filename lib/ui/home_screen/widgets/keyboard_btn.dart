@@ -18,7 +18,7 @@ class KeyboardBtn extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
-        primary: Theme.of(context).colorScheme.primaryVariant,
+        primary: Theme.of(context).colorScheme.primaryContainer,
         elevation: 0,
       ),
       child: !isRemove

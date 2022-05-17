@@ -1,3 +1,4 @@
+import 'package:budget_app/main.dart';
 import 'package:budget_app/service/model/transaction.dart';
 import 'package:budget_app/service/model/transaction_category.dart';
 import 'package:budget_app/service/repository/categories_repository.dart';
@@ -6,10 +7,9 @@ import 'package:budget_app/ui/transactions_screen/transactions_screen.dart';
 import 'package:budget_app/ui/transactions_screen/transactions_screen_model.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
-TransactionsScreenWM transactionsScreenWMFactory(BuildContext context) {
-  final transactionRepository = context.read<TransactionRepository>();
+TransactionsScreenWM transactionsScreenWMFactory(BuildContext _) {
+  final transactionRepository = getIt<TransactionRepository>();
 
   return TransactionsScreenWM(TransactionsScreenModel(transactionRepository));
 }

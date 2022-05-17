@@ -21,7 +21,7 @@ class CategoriesModal extends StatelessWidget {
             .map((category) => Container(
                   margin: const EdgeInsets.symmetric(vertical: 5),
                   child: MaterialButton(
-                    color: Theme.of(context).colorScheme.primaryVariant,
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     height: 40,
                     minWidth: double.infinity,
                     onPressed: () {
